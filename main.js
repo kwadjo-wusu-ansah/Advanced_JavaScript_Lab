@@ -11,12 +11,12 @@ console.log(UsersTodosData);
 
 const todos = UsersTodosData.map((userTodos) => {
   return userTodos.map((todo) => {
-    return new Task(todo.id, todo.userId, todo.title, todo.completed);
+    return new Task(todo?.id, todo?.userId, todo?.title, todo?.completed);
   });
 });
 
 console.log(todos);
 
 const users = usersData.map((user, index) => {
-  return new User(user.id, user.name, user.email, todos[index]);
+  return new User(user?.id, user?.name, user?.email, todos[index]);
 });

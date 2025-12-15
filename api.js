@@ -1,11 +1,12 @@
 export class APIClient {
+  #baseURL;
   constructor(baseURL) {
-    this._baseURL = baseURL;
+    this.#baseURL = baseURL;
   }
 
   async fetchUsers() {
     try {
-      const response = await fetch(`${this._baseURL}/users`);
+      const response = await fetch(`${this.#baseURL}/users`);
       const data = await response.json();
       return data;
     } catch (error) {
@@ -16,7 +17,7 @@ export class APIClient {
 
   async fetchTodos() {
     try {
-      const response = await fetch(`${this._baseURL}/todos`);
+      const response = await fetch(`${this.#baseURL}/todos`);
       const data = await response.json();
       return data;
     } catch (error) {
@@ -29,7 +30,7 @@ export class APIClient {
     try {
       const response = await this.fetchTodos();
       const data = await response;
-      return data.filter((todo) => todo.userId === userId);
+      return data.filter((todo) => todo?.userId === userId);
     } catch (error) {
       console.error("Failed to fetch user's todos:", error);
       throw error;
@@ -40,7 +41,7 @@ export class APIClient {
     try {
       const users = await this.fetchUsers();
       const todos = users.map(async (user) => {
-        const userTodos = await this.fetchUsersTodos(user.id);
+        const userTodos = await this.fetchUsersTodos(user?.id);
         return userTodos;
       });
       const allUserTodos = await Promise.all(todos);

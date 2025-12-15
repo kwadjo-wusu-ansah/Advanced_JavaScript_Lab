@@ -12,7 +12,7 @@ export const filterByUser = (tasks, userId) => {
 
 export const calculateStatistics = (tasks) => {
   taskCount = tasks.length;
-  completedCount = tasks.filter((task) => task._complete).length;
+  completedCount = tasks.filter((task) => task.getComplete()).length;
   incompleteCount = taskCount - completedCount;
   completionRate = taskCount === 0 ? 0 : (completedCount / taskCount) * 100;
 
@@ -22,10 +22,10 @@ export const calculateStatistics = (tasks) => {
 export const groupByUser = (tasks) => {
   UserIdToTasks = new Map();
   tasks.forEach((task) => {
-    if (!UserIdToTasks.has(task._userId)) {
-      UserIdToTasks.set(task._userId, []);
+    if (!UserIdToTasks.has(task.getUserId())) {
+      UserIdToTasks.set(task.getUserId(), []);
     }
-    UserIdToTasks.get(task._userId).push(task);
+    UserIdToTasks.get(task.getUserId()).push(task);
   });
   return UserIdToTasks;
 };
