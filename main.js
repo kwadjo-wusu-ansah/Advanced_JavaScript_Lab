@@ -9,7 +9,7 @@ const prompt = promptSync({ sigint: true });
 
 /* -------------------- Setup -------------------- */
 
-
+// Simple memorizer for async functions (to cache API results)
 const memorizer = (fn) => {
   const cache = new Map();
   return async (...args) => {
@@ -21,23 +21,27 @@ const memorizer = (fn) => {
   };
 };
 
+// Create API client object
 const apiClient = new APIClient("https://jsonplaceholder.typicode.com");
+// Memorize loadData to avoid redundant API calls
 const memorizedLoadData = memorizer(apiClient.loadData.bind(apiClient));
-
 const [usersData, usersTodosData] = await memorizedLoadData();
 
+
+// Map raw data to Task object instances
 const todos = usersTodosData.map((userTodos) =>
   userTodos.map(
     (todo) => new Task(todo.id, todo.userId, todo.title, todo.completed)
   )
 );
 
+// Map raw data to User object instances
 const users = usersData.map(
   (user, index) => new User(user.id, user.name, user.email, todos[index])
 );
 
 /* -------------------- Helpers -------------------- */
-
+// Function to get colored status text ( green for complete, red for overdue, yellow for incomplete)
 const statusColor = (task) => {
   if (task.complete) return chalk.green(task.getStatus());
   if (task instanceof PriorityTask && task.isOverdue())
@@ -45,6 +49,7 @@ const statusColor = (task) => {
   return chalk.yellow(task.getStatus());
 };
 
+// Function to print tasks in a formatted way
 const printTasks = (tasks) => {
   if (tasks.length === 0) {
     console.log(chalk.gray("No tasks found."));
@@ -68,20 +73,23 @@ const printTasks = (tasks) => {
   });
 };
 
+// Function to pause and wait for user input
 const pause = () => prompt("\nPress Enter to continue...");
 
 /* -------------------- User Selection -------------------- */
 
 console.log("\nWelcome to the Task Management System");
 console.log("====================================");
-
+// List users for selection
 users.forEach((user) => {
   console.log(`${user.id}. ${user.name} (${user.email})`);
 });
-
+// Prompt user to select a user
 const userId = Number(prompt("\nSelect user ID: "));
-const selectedUser = users.find((user) => use.id === userId);
+// Find selected user
+const selectedUser = users.find((user) => user.id === userId);
 
+// Handle invalid user selection
 if (!selectedUser) {
   console.log("Invalid user. Exiting...");
   process.exit(1);
@@ -162,7 +170,6 @@ while (running) {
         Date.now(), // simple unique ID
         selectedUser.id,
         title,
-        false,
         priority,
         dueDate
       );
@@ -199,4 +206,5 @@ while (running) {
   }
 }
 
-console.log("\nGoodbye!");
+console.log("\nThank you for using Kwadjo's Task Management System!");
+console.log("Goodbye!\n");

@@ -44,7 +44,8 @@ export class PriorityTask extends Task {
       return false; // No due date means it can't be overdue
     } else {
       const now = new Date();
-      return now > this.dueDate && !this.complete; //  this check if it is complete then not overdue but if not complete and past due date then overdue
+      return now > this.dueDate && !this.complete; //  this check if it is complete then not overdue but if not complete 
+      // and past due date then overdue
     }
   }
 
@@ -89,7 +90,7 @@ export class User {
   addTask(task) {
     this.#tasks.push(task);
   }
-
+// Calculate and return the completion rate of the user's tasks
   getCompletionRate() {
     if (this.#tasks.length === 0) return 0;
     const completedTasks = this.#tasks.filter((task) => task.complete).length;
@@ -97,7 +98,7 @@ export class User {
 
     //Modified to return percentage of completed tasks get the Day, Month and Year
   }
-
+// Get tasks by their completion status
   getTasksByStatus(status) {
     return this.#tasks.filter((task) => {
       if (status === "Complete") return task.complete;
@@ -105,7 +106,7 @@ export class User {
       return false;
     });
   }
-
+// Get all overdue tasks for the user
   getOverdueTasks() {
     return this.#tasks.filter((task) => {
       if (task instanceof PriorityTask) {
@@ -113,7 +114,7 @@ export class User {
       }
     });
   }
-
+// Get tasks by their priority level
   getTasksByPriority(priority) {
     return this.#tasks.filter((task) => {
       if (task instanceof PriorityTask) {
@@ -122,7 +123,7 @@ export class User {
       return false;
     });
   }
-
+// Get tasks due before a specific date
   getTasksDueBefore(date) {
     return this.#tasks.filter((task) => {
       if (task instanceof PriorityTask && task.dueDate) {
