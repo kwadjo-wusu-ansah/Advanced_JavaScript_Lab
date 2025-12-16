@@ -1,40 +1,50 @@
 export class Task {
+  #id;
+  #userId;
   constructor(id, userId, title, complete = false) {
-    this._id = id;
-    this._userId = userId;
+    this.#id = id;
+    this.#userId = userId;
     this.title = title;
-    this._complete = complete;
+    this.complete = complete;
   }
+
+  get id() {
+    return this.#id;
+  }
+  get userId() {
+    return this.#userId;
+  }
+
 
   // Toggle the completion status of the task
   toggle() {
-    this._complete = !this._complete;
+    this.complete = !this.complete;
   }
 
-  isOverdue(dueDate) {
+  isOverdue() {
     throw new TypeError(
       `The 'isOverdue' method is not implemented in the Task class and must be overridden in subclasses.`
     );
   }
 
   getStatus() {
-    return this._complete ? "Complete" : "Incomplete";
+    return this.complete ? "Complete" : "Incomplete";
   }
 }
 
 export class PriorityTask extends Task {
   constructor(id, userId, title, complete, priority, dueDate = null) {
     super(id, userId, title, complete);
-    this.priority = priority; // 'Low', 'Medium', 'High'
+    this.priority = priority; // 'low', 'medium', 'high'
     this.dueDate = dueDate;
   }
 
   isOverdue() {
-    if (!this.dueDate) {
+    if (!this.dueDate || this.dueDate === null) {
       return false; // No due date means it can't be overdue
     } else {
       const now = new Date();
-      return now > this.dueDate && !this._complete; //  this check if it is complete then not overdue but if not complete and past due date then overdue
+      return now > this.dueDate && !this.complete; //  this check if it is complete then not overdue but if not complete and past due date then overdue
     }
   }
 
@@ -49,29 +59,75 @@ export class PriorityTask extends Task {
 }
 
 export class User {
+  #id;
+  #name;
+  #email;
+  #tasks;
   constructor(id, name, email, tasks = []) {
-    this._id = id;
-    this._name = name;
-    this._email = email;
-    this._tasks = tasks;
+    this.#id = id;
+    this.#name = name;
+    this.#email = email;
+    this.#tasks = tasks;
+  }
+
+  get id() {
+    return this.#id;
+  }
+
+  get name() {
+    return this.#name;
+  }
+
+  get email() {
+    return this.#email;
+  }
+
+  get tasks() {
+    return this.#tasks;
   }
 
   addTask(task) {
-    this._tasks.push(task);
+    this.#tasks.push(task);
   }
 
   getCompletionRate() {
-    if (this._tasks.length === 0) return 0;
-    const completedTasks = this._tasks.filter((task) => task._complete).length;
-    return (completedTasks / this._tasks.length) * 100;
+    if (this.#tasks.length === 0) return 0;
+    const completedTasks = this.#tasks.filter((task) => task.complete).length;
+    return (completedTasks / this.#tasks.length) * 100;
 
     //Modified to return percentage of completed tasks get the Day, Month and Year
   }
 
   getTasksByStatus(status) {
-    return this._tasks.filter((task) => {
-      if (status === "Complete") return task._complete;
-      if (status === "Incomplete") return !task._complete;
+    return this.#tasks.filter((task) => {
+      if (status === "Complete") return task.complete;
+      if (status === "Incomplete") return !task.complete;
+      return false;
+    });
+  }
+
+  getOverdueTasks() {
+    return this.#tasks.filter((task) => {
+      if (task instanceof PriorityTask) {
+        return task.isOverdue();
+      }
+    });
+  }
+
+  getTasksByPriority(priority) {
+    return this.#tasks.filter((task) => {
+      if (task instanceof PriorityTask) {
+        return task.priority === priority;
+      }
+      return false;
+    });
+  }
+
+  getTasksDueBefore(date) {
+    return this.#tasks.filter((task) => {
+      if (task instanceof PriorityTask && task.dueDate) {
+        return task.dueDate < date;
+      }
       return false;
     });
   }
