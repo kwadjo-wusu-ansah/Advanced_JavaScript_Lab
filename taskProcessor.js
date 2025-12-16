@@ -36,3 +36,20 @@ export const searchTasks = (tasks, keyword) => {
     task.title.toLowerCase().includes(lowerKeyword)
   );
 };
+
+// Sort tasks by their due date
+export const sortByDueDate = (tasks, ascending = true) => {
+  return tasks.slice().sort((a, b) => {
+    const dateA = a.dueDate ? new Date(a.dueDate) : null;
+    const dateB = b.dueDate ? new Date(b.dueDate) : null;
+if (!dateA && !dateB) return 0;
+    if (!dateA) return 1;
+    if (!dateB) return -1;
+
+    if (ascending) {
+      return dateA - dateB;
+    } else {
+      return dateB - dateA;
+    }
+  });
+};
