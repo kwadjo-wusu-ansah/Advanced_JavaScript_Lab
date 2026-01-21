@@ -79,7 +79,7 @@ users.forEach((user) => {
 });
 
 const userId = Number(prompt("\nSelect user ID: "));
-const selectedUser = users.find((u) => u.id === userId);
+const selectedUser = users.find((user) => user.id === userId);
 
 if (!selectedUser) {
   console.log("Invalid user. Exiting...");
