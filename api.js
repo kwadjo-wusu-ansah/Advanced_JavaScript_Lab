@@ -3,7 +3,7 @@ export class APIClient {
   constructor(baseURL) {
     this.#baseURL = baseURL;
   }
-
+// Fetch users from the API
   async fetchUsers() {
     try {
       const response = await fetch(`${this.#baseURL}/users`);
@@ -14,7 +14,7 @@ export class APIClient {
       throw error;
     }
   }
-
+// Fetch todos from the API
   async fetchTodos() {
     try {
       const response = await fetch(`${this.#baseURL}/todos`);
@@ -26,6 +26,8 @@ export class APIClient {
     }
   }
 
+  // Fetch todos for a specific user
+
   async fetchUsersTodos(userId) {
     try {
       const response = await this.fetchTodos();
@@ -36,7 +38,7 @@ export class APIClient {
       throw error;
     }
   }
-
+// Load both users and their todos
   async loadData() {
     try {
       const users = await this.fetchUsers();

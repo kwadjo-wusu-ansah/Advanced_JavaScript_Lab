@@ -5,11 +5,12 @@ export const filterByStatus = (tasks, status) => {
     return taskStatus.startsWith(status);
   });
 };
-
+// Filter tasks by user ID
 export const filterByUser = (tasks, userId) => {
   return tasks.filter((task) => task._userId === userId); 
 };
 
+// Calculate statistics for a set of tasks
 export const calculateStatistics = (tasks) => {
   taskCount = tasks.length;
   completedCount = tasks.filter((task) => task.getComplete()).length;
@@ -18,7 +19,7 @@ export const calculateStatistics = (tasks) => {
 
   return { tasksCount, completedCount, incompleteCount, completionRate };
 };
-
+// Group tasks by their user ID
 export const groupByUser = (tasks) => {
   UserIdToTasks = new Map();
   tasks.forEach((task) => {
@@ -29,7 +30,7 @@ export const groupByUser = (tasks) => {
   });
   return UserIdToTasks;
 };
-
+// Search tasks by keyword in their title
 export const searchTasks = (tasks, keyword) => {
   const lowerKeyword = keyword.toLowerCase();
   return tasks.filter((task) =>
